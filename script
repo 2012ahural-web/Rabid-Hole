@@ -1,0 +1,491 @@
+default persistent.player_name = "67"
+define s = DynamicCharacter("persistent.player_name",who_colo="#a26aa9")
+
+define n = Character("None")
+define v = Character("Vivian", who_color="#647959")
+define f = Character("Florian", who_color="#c78e21")
+
+image vivian happy = "/images/vivian happy.png"
+image florian happy = ("/images/florian happy.png")
+
+default persistent.variable_mizu5 = False
+default persistent.variable_ena5 = False
+default persistent.variable_kana5 = False
+
+label start:
+    if persistent.variable_mizu5 == True:
+        jump day2
+    if persistent.variable_ena5 == True:
+        jump day3
+    if persistent.variable_kana5 == True:
+        jump day5
+    else:
+        jump day1
+
+
+label day1:
+    $ persistent.player_name = renpy.call_screen("custom_name_input")
+    $ persistent.player_name = persistent.player_name.strip() or "67"
+    scene bg black
+    with Dissolve (.5)
+
+    pause .5
+
+    scene bg room
+
+    with Dissolve (.5)
+
+    scene bg room
+
+    pause
+
+    with Dissolve (.5)
+
+    scene bg book
+
+    s "I can't belive I finally finished my last book!"
+    s "Ive worked on this book for so long.."
+
+    with Dissolve (.5)
+
+    scene bg book_closed
+
+    s "The last book of my beloved Venus FlyTrap series. "
+    s "I can't wait to tell Vivian and Florian the news!"
+
+    with Dissolve (.5)
+
+    scene bg kitchen
+
+    show florian happy
+
+    s "Hey Florian, Its done! {w}I finally finished my 4th book!"
+    f "Really? I cant wait to read it. "
+    f "We can finally publish your 4th book,{w}and even start advertising for the 5th one! "
+    s "What?"
+    s "Im not writing a 5th one..? "
+    f "What do you mean."
+    f "It was in our contract that you need to write AT LEAST 5 books, wasn't it??"
+    s "No..."
+    s "Well, anyway, here's the manuscript for.. proofreading."
+    f "Right..."
+
+    scene bg living_room
+    show vivian happy
+
+    s "Hey Vivian, I got good news!"
+    v "What are the good news?"
+    s "I finally finished my 4th Venus Flytrap book!"
+    v "Aww, that`s nice!{w=.5} I`m happy for you. "
+    s "Yes! Im happy too, Im so proud. "
+    s "The last book of the Venus Flytrap series!"
+    v "Its the last one? {w}Didn`t you and Florian have a contract that you had to have 5 books?"
+    s "We didn`t have a contract... {w}That was originally the plan but I changed my mind. "
+    s "He didn't take it very well.. "
+    v "... {w}No surprise there..."
+    s "What do you mean by that? "
+    v "He is always harsh like that, you know..."
+
+    with Dissolve (.5)
+
+    scene bg room
+    s "Ugh..I can't wait to finally go to sle-"
+    with vpunch
+    "???" "{size=+10}THUMP-!"
+    s "M-my head.. {w=.7}hurts..."
+
+    $ persistent.variable_mizu5 = True
+    $ persistent.variable_ena5 = False
+    $persistent.variable_kana5 = False
+    $ renpy.save_persistent()
+
+    $ renpy.quit()
+label day2:
+    scene bg room
+    s "H-huh?.. {w}W-what happend?.."
+    s "!!.."
+    s "I guess that was.. a dream? {p}A very weird one, though.."
+
+    #(???)
+
+    with Dissolve (.5)
+    scene bg book
+
+    s "Huh? {w}I swear I finished writing this book yesterday..."
+    s "I guess I misremembered?"
+    s "I`ll write the ending again then."
+
+    with Dissolve (.5)
+    scene bg book_closed
+    s "I finished it! {w}again.."
+
+    s "Its so hot in here.. I`ll open the window."
+    with Dissolve (.5)
+    scene bg window
+
+    pause
+
+    with Dissolve (.5)
+    scene bg open_window
+
+    s "Finally! Some fresh air."
+    s "Okay, Ill get back to work now.."
+    s "HUH!? What are you doing!!!"
+    "???" "{i}Pushes [persistent.player_name] out the window{/i}"
+
+    $ persistent.variable_mizu5 = False
+    $ persistent.variable_ena5 = True
+    $ persistent.variable_kana5 = False
+    $ renpy.quit()
+
+    # LOOP THREE
+
+label day3:
+    default asked_vivian = False
+    default asked_florian = False
+    default l = 15
+    default menu_flag = False
+
+    default vivian_c1 = False
+    default vivian_c2 = False
+
+    pause
+
+    s "Okay, so what the hell is happening?!"
+    s "Im pretty sure I've seen this exact day for like 15 times!"
+    s "It looks like.."
+    s "I'm getting.."
+    s "{i}{b}Killed?{/i}{/b}"
+    s "I should probably do something about this.."
+    if l >= 15:
+
+        while l > 2:
+
+            menu:
+                "I should find out who my killer is":
+
+                    $ menu_flag = True
+                    s "I will start out by questioning Vivian and Florian. Maybe they know something."
+                    $ l = 1
+
+                "It's fine, I'm sure it will figure itself out...":
+
+                    $ menu_flag = False
+                    s "I'm sure it will{w}.{w}.{w}."
+                    s "I've been here for [l] days. Maybe I should try doing something..."
+                    $ l = l + 1
+
+label choice1_done:
+    scene bg room
+    show florian happy at left
+    show vivian happy at right
+
+    s "Who should I question first?"
+
+    menu:
+
+        "Vivian" if not asked_vivian:
+            jump vivian_conversation
+        "Florian" if not asked_florian:
+            jump florian_conversation
+        "I`ve talked to both of them." if asked_vivian and asked_florian:
+            jump day4
+
+label vivian_conversation:
+
+    hide florian happy
+    scene bg living_room
+    with fade
+    show vivian happy at center
+    with move
+    $asked_vivian = True
+
+    $ menu_flag = True
+
+    s "Hey, I think Florian has been acting really pushy lately."
+    s "Do you know anything about that?"
+    v "I'm assuming you're talking about him being pushy about that new book you're writing, right?"
+    s "Yeah."
+    v "He's probably only pushing you so hard because he wants the money to roll in..."
+    v "Florian has always been {cps=20}VERY {/cps}greedy."
+    s "What do you mean by greedy?"
+    v "Florian has always been interested in your fame and, more importantly, your money."
+    v "Your books practically sell themselves."
+    v "Honestly, I think someone could even kill for a collection like yours."
+    s "Kill...?"
+    v "Well, think about it. Your books would probably double in value after your death."
+    v "Creepy, I know, but it's practically a business opportunity."
+
+    menu:
+        "You really think he could kill someone?" if not vivian_c1:
+
+            $ vivian_c1 = True
+
+            v "He's not exactly kind, and I wouldn't put it past him to hurt someone."
+            v "Especially if it meant getting what he wanted, particularly money."
+            s "I would never in a million years think he was capable of doing something like that."
+            v "I didn't think so either, until he threatened me."
+            s "What do you mean? He threatened you?"
+            v "Well, not exactly. But he was furious. He called me a stupid little white rabbit and said I couldn't do anything on my own."
+            v "All because I suggested that he publish one of my books."
+            s "Was he actually going to hurt you?"
+            v "No, but he looked as if he was five seconds away from ripping me apart."
+
+            jump vivian_questions
+
+        "Would the books really double in value?" if not vivian_c2:
+
+            $ vivian_c2 = True
+
+            v "Well, think about it. If you died, Florian would have your last book to sell."
+            v "And with the right advertising, the sales could go through the roof."
+            s "I don't think it would be that easy to earn money from my death."
+            v "Oh, but it would! People love a tragic story, especially when a famous author is involved."
+            v "Your last book would definitely become a bestseller."
+            jump vivian_questions
+
+        "I think I should leave now ":
+
+            jump choice1_done
+
+label florian_conversation:
+    scene bg kitchen
+    with fade
+    hide vivian happy
+    show florian happy at center
+    with move
+    $ asked_florian = True
+
+    $ menu_flag = False
+
+    s "{i}Maybe I should talk to Florian directly.{/i}"
+    s "{i}I wonder what he has to say about all this.{/i}"
+
+    $ florian_c1 = False
+    $ florian_c2 = False
+    $ florian_c3 = False
+
+    s "Hey, I think Vivian has been acting rather strangely lately. Do you have any idea why that might be?"
+    f "Hmm? I can't say I've noticed anything out of the ordinary. What exactly do you mean?"
+    s "Well..."
+
+label florian_questions:
+
+    menu:
+        "I think she might be trying to kill me." if not florian_c1:
+            $ florian_c1 = True
+
+            s "I think she might be trying to kill me."
+            f "Excuse me? That is easily the most absurd thing I've heard all week. Why on earth would she want to kill you?"
+            s "I don't know. I just have this strange feeling that something isn't right."
+            f "I wouldn't jump to such conclusions if I were you. Vivian has her quirks, sure, but she's still your sister."
+            s "You're right... Maybe I'm just letting my imagination run wild."
+
+            jump florian_questions
+
+        "She's been talking strangely about my last book." if not florian_c2:
+            $ florian_c2 = True
+
+            s "She's been talking rather strangely about my last book. Almost as if she's looking for a way to steal it."
+            f "Oh... Well, now that you mention it, she has been behaving a bit weird in that regard."
+            s "What do you mean?"
+            f "I hadn't planned on bringing this up, it felt unnecessary, but she actually approached me recently about publishing a book of her own."
+            s "She did?"
+            f "Yes. I turned her down. The last thing anyone needs is some petty sibling rivalry."
+            s "What do you mean by rivalry?"
+            f "Well, to be honest, I just made up an excuse to turn her down. It's hardly a secret that rabbits aren't exactly the sharpest tools in the shed, so she couldn't possibly make a good enough book."
+
+            menu:
+                "Don't you dare call my sister that!":
+                    s "Don't you dare call my sister that!"
+                    f "There's no need to take everything so personally; it's merely a statement of fact."
+                    s "She's still my sister."
+                    f "Yes, yes, very noble. In any case, I have nothing further to add on the matter. Not that you're in any mood to listen."
+                    jump florian_questions
+
+                "What do you mean by publishing her own book?":
+                    s "What do you mean by publishing her own book?"
+                    f "Honestly? I struggle to imagine her writing anything worth printing. I glanced over a few of her drafts out of sheer curiosity, and they were painfully mediocre at best."
+                    s "That's a little harsh."
+                    f "I'm merely being realistic. Though, since you brought up the idea of theft... I suppose there is an angle worth considering."
+                    s "What angle?"
+                    f "Hypothetically speaking, if she were to get her hands on your seventh book, she could easily claim she finished it herself and bring it to me to publish."
+                    s "Surely you'd recognize my writing style and know it wasn't hers?"
+                    f "Would I? If she already had the physical manuscript and knew the ins and outs of your work, proving otherwise could become... rather complicated."
+                    s "That's... disturbing."
+                    f "You're the one who asked. I'm simply giving you something to think about."
+                    jump florian_questions
+
+        "She's been worrying me. A lot." if not florian_c3:
+            $ florian_c3 = True
+
+            s "She's been worrying me lately. She acts as if she never gets enough attention from anyone."
+            f "Hmm. I haven't paid much attention to her social needs, I'm afraid, though it sounds like textbook jealousy."
+            s "Jealousy?"
+            f "You've always been the successful one, haven't you? Eventually, anyone would grow tired of living in someone else's shadow."
+            s "But she's so sweet. I can't picture her harboring that kind of resentment toward me."
+            f "Never let a pleasant demeanor fool you. People can be remarkably sweet when they want something."
+            s "Even you?"
+            f "Especially me."
+            s "Well, at least you're honest about it..."
+
+            jump florian_questions
+
+        "I've heard enough for now.":
+            jump choice1_done
+
+label vivian_questions:
+
+    menu:
+
+        "You really think he could kill someone?" if not vivian_c1:
+            $ vivian_c1 = True
+
+            v "He's not exactly kind, and I wouldn't put it past him to hurt someone."
+            v "Especially if it meant getting what he wanted. Money, for example."
+            s "I would never in a million years think he was capable of something like that."
+            v "I didn't think so either, until he threatened me."
+            s "What do you mean? He threatened you?"
+            v "Well, not exactly. But he was furious. He called me a stupid little white rabbit and said I couldn't do anything on my own."
+            v "And all because I suggested that he publish one of my books."
+            s "Was he actually going to hurt you?"
+            v "No, but he looked as if he was five seconds away from ripping me apart."
+            
+            jump vivian_questions
+
+        "Would the books really double in value?" if not vivian_c2:
+            $ vivian_c2 = True
+
+            v "Well, think about it. If you died, Florian would have your last book to sell."
+            v "And with the right advertising, the sales could go through the roof."
+            s "I don't think it would be that easy to earn money from my death."
+            v "Oh, but it would! People love a tragic story, especially when a famous author is involved."
+            v "Your last book would definitely become a bestseller."
+            s "Who knows..."
+
+            jump vivian_questions
+
+        "I've heard enough for now.":
+            jump choice1_done
+
+label day4:
+    scene bg room
+    s "So, "
+    s "I think now I have all the clues I need."
+    
+    s "So.. what do I do with them?"
+
+    menu:
+
+        "Kill that person. The one that killed {i}you{/i} all those times.":
+
+            jump choice3_done
+
+label choice3_done:
+    s "K-kil them?.. I`m not sure.."
+    s "But.. That`s the only fair thing to do, right?.."
+    s "You know, I start feeling kind of dizzy, after that tea I had last time.."
+    s "{b}Wait.{/b}"
+
+    $ persistent.variable_mizu5 = False
+    $ persistent.variable_ena5 = False
+    $ persistent.variable_kana5 = True
+    $ renpy.quit()
+
+
+label day5:
+    s "Okay, I gues I`ll need to do it.."
+    s "I think that I should kill -"
+
+    menu:
+        "Vivian":
+            jump vivian_kill
+        "Florian":
+            jump florian_kill
+
+    label vivian_kill :
+
+        show vivian happy
+        s "I always felt it was her. She always pretended to be nice but.. In my heart I knew she wasn't "
+        s "Still, I never thought that she would actually ever.. kill me..."
+        s "But a killer is a killer, no matter who they are to you.."
+        scene bg living_room
+        show vivian happy
+        s "Vivian, {w}I know it was you. "
+        s "I know that YOU have been killing me all these times."
+        v "..."
+        v "I don't know what you are talking about. "
+        s "Dont play dumb."
+        v "YOU DONT HAVE ANY PROOF!"
+        s "I don't need any proof... "
+        s "I really only have one solution out of this.."
+        v "What?...{w}No,{w} you're not planning to ..."
+        v "You wouldn't dare. {w}Or would you..."
+        v "NO! {w}YOU CAN'T DO THIS TO ME!!"
+
+        s "Im sorry... {w}There isn't any other option"
+        scene bg black
+        v "!!!"
+        "{i}SHLINK_!{/i}"
+        s "I cant belive I actually did it..."
+        s "But.. At least, my suffering ends here."
+        show vivian blood
+        with fade
+
+        $ persistent.variable_mizu5 = False
+        $ persistent.variable_ena5 = False
+        $ persistent.variable_kana5 = False
+        $ renpy.quit()
+
+    label florian_kill:
+        s "I always knew it was him, he is probably doing it for the money."
+        s "Even thought I never would have thought that that would make him kill me..."
+        s "But a killer is a killer no matter who they are to you.. I guess."
+        scene bg kitchen
+        show florian happy
+        s "Florian, {w}I know it`s you "
+        s "I know that YOU have been killing me all these times."
+        f "What?"
+        f "What the hell are you talking about?"
+        s "Dont play dumb."
+        f "What? Don't play dumb about what."
+        s "I know you have been killing me Florian, It`s over."
+        f "I have been WHAT??"
+        s "Its too late to play dumb you've been killing me and torturing me with this whole groundhog day"
+        s "because i killed of your money making book series."
+        f "???"
+        f "YOU WANT TO.. KILL ME?!"
+        s "I`m sorry... {w} There isn't any other option"
+        scene bg black
+        f "!!!"
+        "{i}SHLINK-!{/i}"
+        s "I can't belive I.. actually did it..."
+
+        pause(.5)
+        show vivian happy
+
+        v "Haha..{w}HAHAHAHHAHAH!"
+        v "I CAN'T BELIVE THAT YOU ACTUALLY KILLED HIM!"
+        v "I mean, I thought you were going to fall into my trap, but..."
+        v "I couldn't imagine that my plan would go this smooth."
+        v "To be honest, {w}you just made things a lot easier for me."
+        v "Thank you."
+        v "But, {w}every good thing has to come to an end..."
+        v "So,"
+        v "{b}{i}{color=#ff0000}Goodbye, [persistent.player_name].{/color}{/b}{/i}"
+        "{i}You try to fight Vivian off, but she is just stronger and you can't do anything.{/i}"
+        "{i}You feel a sharp pain in your chest..{/i}"
+        "{i}You try to sightly open your eyes,{/i}"
+        "{i}And you see Vivian, staring at you with a subtle smile."
+        "{i}Your chest starts feeling warm, and it doesn't even hurt that much anymore.{/i}"
+        "{i}Suddenly you want to sleep really bad.{/i}"
+        "{i}You close your eyes{/i} "
+        with Dissolve (.5)
+        scene bg black
+        "{i}{b}Except this time, you don't wake up again.{/b}{/i}"
+        $ persistent.variable_mizu5 = False
+        $ persistent.variable_ena5 = False
+        $ persistent.variable_kana5 = False
+        $ renpy.quit()
+
+    return
